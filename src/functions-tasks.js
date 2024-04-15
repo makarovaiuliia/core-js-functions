@@ -32,8 +32,9 @@ function getCurrentFunctionName() {
  *   getFunctionBody(hiHello) => "function hiHello() { console.log('hello world'); }"
  *
  */
-function getFunctionBody(/* func */) {
-  throw new Error('Not implemented');
+function getFunctionBody(func) {
+  const body = func.toString();
+  return body;
 }
 
 /**
@@ -93,8 +94,16 @@ function getPowerFunction(exponent) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...coefficients) {
+  if (coefficients.length === 0) {
+    return null;
+  }
+
+  return function func(x) {
+    return coefficients.reduce((sum, current, index) => {
+      return sum + current * x ** (coefficients.length - index - 1);
+    }, 0);
+  };
 }
 
 /**
@@ -111,14 +120,17 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  let result;
+  let isCached = false;
 
-  // let result;
-  // if (!result) {
-  //   result = func();
-  // }
-  // return result;
+  return function () {
+    if (!isCached) {
+      result = func();
+      isCached = true;
+    }
+    return result;
+  };
 }
 
 /**
@@ -136,8 +148,18 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  return function () {
+    let lastError;
+    for (let i = 0; i < attempts; i += 1) {
+      try {
+        return func();
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw lastError;
+  };
 }
 
 /**
@@ -163,12 +185,17 @@ function retry(/* func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  return function (...args) {
+    const funcName = func.name || 'function';
+    const argsStr = args.map((arg) => JSON.stringify(arg)).join(',');
+    logFunc(`${funcName}(${argsStr}) starts`);
 
-  // return function log(arg) {
+    const result = func(...args);
 
-  // };
+    logFunc(`${funcName}(${argsStr}) ends`);
+    return result;
+  };
 }
 
 /**
@@ -184,8 +211,10 @@ function logger(/* func, logFunc */) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(/* fn, ...args1 */) {
-  throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args1) {
+  return function (...args2) {
+    return fn(...args1, ...args2);
+  };
 }
 
 /**
