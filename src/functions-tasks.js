@@ -32,9 +32,8 @@ function getCurrentFunctionName() {
  *   getFunctionBody(hiHello) => "function hiHello() { console.log('hello world'); }"
  *
  */
-function getFunctionBody(func) {
-  const body = func.toString();
-  return body;
+function getFunctionBody(/* func */) {
+  throw new Error('Not implemented');
 }
 
 /**
@@ -124,7 +123,7 @@ function memoize(func) {
   let result;
   let isCached = false;
 
-  return function () {
+  return function hey() {
     if (!isCached) {
       result = func();
       isCached = true;
@@ -149,7 +148,7 @@ function memoize(func) {
  * retryer() => 2
  */
 function retry(func, attempts) {
-  return function () {
+  return function hey() {
     let lastError;
     for (let i = 0; i < attempts; i += 1) {
       try {
@@ -186,7 +185,7 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-  return function (...args) {
+  return function hey(...args) {
     const funcName = func.name || 'function';
     const argsStr = args.map((arg) => JSON.stringify(arg)).join(',');
     logFunc(`${funcName}(${argsStr}) starts`);
@@ -212,7 +211,7 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
 function partialUsingArguments(fn, ...args1) {
-  return function (...args2) {
+  return function hey(...args2) {
     return fn(...args1, ...args2);
   };
 }
